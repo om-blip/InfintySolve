@@ -19,7 +19,7 @@ A Django-based AI-powered web application that enables users to **solve handwrit
 - **Image Processing**: PIL (Pillow)
 - **Frontend**: HTML, StreamingHttpResponse
 
-📸 How It Works
+**📸 How It Works**
 Gesture Input: Uses index finger to draw on a virtual canvas.
 
 Canvas Analysis: The drawn image is captured and sent to Gemini AI.
@@ -28,7 +28,7 @@ AI Response: The model returns a step-by-step solution.
 
 Image Upload: Optionally, users can upload an image to get an instant answer.
 
-✍️ Hand Gestures
+**✍️ Hand Gestures**
 ☝️ Index Finger → Draw
 
 🖐️ All Fingers → Clear canvas
@@ -37,7 +37,7 @@ Image Upload: Optionally, users can upload an image to get an instant answer.
 
 ✌️ Index + Middle → Pause drawing
 
-🧠 Future Improvements
+**🧠 Future Improvements**
 Add support for more complex math (graphs, equations).
 
 Enhance drawing smoothness using better trajectory prediction.
