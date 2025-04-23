@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212; /* Dark mode background */
+            color: #e0e0e0; /* Dark mode text */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-mode {
+            background-color: #ffffff; /* Light mode background */
+            color: #121212; /* Light mode text */
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #1e1e1e; /* Dark mode navbar */
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-mode .navbar {
+            background-color: #f5f5f5; /* Light mode navbar */
+        }
+
+        .nav-links a {
+            color: #bb86fc; /* Link color */
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .toggle-switch {
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #bb86fc; /* Heading color */
+        }
+
+        /* Upload Section */
+        .upload-section {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 60px 20px;
+            background-color: #1e1e1e; /* Dark mode background */
+            margin: 40px auto;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-mode .features-section {
+            background-color: #f5f5f5; /* Light mode background */
+        }
+
+        .features-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .feature-card {
+            width: 30%;
+            background-color: #2c2c2c; /* Dark mode card */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 10px;
+        }
+
+        body.light-mode .feature-card {
+            background-color: #ffffff; /* Light mode card */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px); /* Lift effect */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-card i {
+            font-size: 40px;
+            color: #bb86fc; /* Icon color */
+            margin-bottom: 10px;
+        }
+
+        /* Guide Section */
+        .guide-section {
+            padding: 60px 20px;
+            background-color: #2e2e2e; /* Dark mode background */
+            margin: 40px auto;
+            border-radius: 10px;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-mode .guide-section {
+            background-color: #f8f8f8; /* Light mode background */
+            color: #121212;
+        }
+
+        .guide-content {
+            text-align: left;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .guide-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .guide-content p {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        /* About and Contact Section */
+        .about-section,
+        .contact-section {
+            max-width: 1200px;
+            width: 100%;
+            padding: 60px 20px;
+            background-color: #1e1e1e; /* Dark mode background */
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin: 40px auto;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body.light-mode .about-section,
+        body.light-mode .contact-section {
+            background-color: #ffffff; /* Light mode background */
+        }
+
+        .about-content,
+        .contact-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .about-text,
+        .contact-text {
+            max-width: 600px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .video-container, .response-container {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .feature-card {
+                width: 100%;
+                margin: 10px auto; /* Center cards */
+            }
+        }
+
+        /* Accessibility Focus Styles */
+        a:focus,
+        button:focus {
+            outline: 2px dashed #bb86fc;
+            outline-offset: 4px;
+        }
+
+        body.light-mode a:focus,
+        body.light-mode button:focus {
+            outline-color: #6200ea;
+        }
+    </style>
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Function to Fetch AI Response Every Second
+        function fetchResponse() {
+            document.getElementById('response-text').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('timestamp').style.display = 'none';
+
+            fetch('/get_response')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    if (data.response) {
+                        document.getElementById('response-text').style.display = 'block';
+                        document.getElementById('response-text').innerHTML = data.response;
+                        const now = new Date();
+                        const formattedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        document.getElementById('timestamp').innerHTML = 'Last updated: ' + formattedTime;
+                        document.getElementById('timestamp').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'block';
+                    console.error('Error fetching response:', error);
+                });
+        }
+
+        // Initialize Fetching When the Page Loads
+        window.onload = function() {
+            setInterval(fetchResponse, 1000);  // Fetch response every second
+        };
+
+        // Function to Toggle Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        // Function to Upload Image
+        function uploadImage() {
+            var formData = new FormData(document.getElementById('uploadForm'));
+            fetch('/upload_image/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response) {
+                    document.getElementById('response-text').style.display = 'block';
+                    document.getElementById('response-text').innerHTML = data.response;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Accessibility: Allow toggle via keyboard
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'd' || event.key === 'D') {
+                toggleDarkMode();
+            }
+        });
+    </script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#" class="logo" aria-label="InfinitySolve Home">
+            <i class="fas fa-calculator"></i> InfinitySolve
+        </a>
+        <div class="nav-links">
+            <a href="#home" aria-label="Home">Home</a>
+            <a href="#features" aria-label="Features">Features</a>
+            <a href="#guide" aria-label="Guide">How to Use</a> <!-- New Guide Tab -->
+            <a href="#about" aria-label="About">About</a>
+            <a href="#contact" aria-label="Contact">Contact</a>
+            <a href="#" class="toggle-switch" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">
+                <i class="fas fa-moon"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main" id="home">
+        <h1>Hand Tracking Drawing</h1>
+        <div class="container">
+            <div class="video-container" aria-label="Live Video Feed">
+                <img src="{% url 'video_feed' %}" alt="Live Video Feed" loading="lazy" />
+            </div>
+            <div class="response-container" aria-live="polite" aria-atomic="true">
+                <h2>Answer:</h2>
+                <div id="response">
+                    <p id="response-text" style="display: none;"></p>
+                    <div id="loading" class="spinner" style="display: none;" aria-label="Loading"></div>
+                    <p id="error-message" class="error" style="display: none;">Error fetching response. Please try again.</p>
+                    <p id="timestamp" style="display: none; margin-top: 10px; font-size: 14px; color: #757575;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Upload Form -->
+    <div class="upload-section">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="imageUpload">Upload Math Problem Image:</label>
+            <input type="file" id="imageUpload" name="image" accept="image/*">
+            <button type="button" onclick="uploadImage()">Upload & Solve</button>
+        </form>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section" id="features">
+        <h2>Features</h2>
+        <div class="features-container">
+            <div class="feature-card">
+                <i class="fas fa-pencil-alt"></i>
+                <h3>Intuitive Drawing</h3>
+                <p>Draw effortlessly using hand gestures with smooth and responsive tracking.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-robot"></i>
+                <h3>AI Integration</h3>
+                <p>Experience the power of AI to understand and solve your math problems instantly.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-image"></i>
+                <h3>Image Upload</h3>
+                <p>Upload an image of the problem and get the AI to solve it for you.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-comments"></i>
+                <h3>User Interaction</h3>
+                <p>Engage with the app through interactive feedback and intuitive controls.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guide Section -->
+    <div class="guide-section" id="guide">
+        <h2 align = "center">How to Use InfinitySolve</h2>
+        <div class="guide-content">
+            <h3>Available Gestures:</h3>
+            <p><strong>☝️ Index finger up:</strong> Start drawing on the canvas.</p>
+            <p><strong>✌️ Index and middle fingers up:</strong> Stop drawing.</p>
+            <p><strong>🖐️ All fingers up / open hand:</strong> Clear the canvas.</p>
+            <p><strong>👍 Thumbs up:</strong> Submit your drawing to the AI.</p>
+        </div>
+    </div>
+
+
+    <!-- About Section (Kept Unchanged) -->
+    <div class="about-section" id="about">
+        <h2>About InfinitySolve</h2>
+        <div class="about-content">
+            <img src="D:\Downloads\AD.jpg" alt="About InfinitySolve" width="400" height="400">
+            <div class="about-text">
+                <p>
+                    InfinitySolve is a cutting-edge virtual calculator that harnesses the power of hand tracking and artificial intelligence to provide an innovative and interactive mathematical experience. Whether you're solving complex equations or drawing geometric shapes, InfinitySolve makes the process intuitive and efficient.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Section (Kept Unchanged) -->
+    <div class="contact-section" id="contact">
+        <h2>Contact Us</h2>
+        <p>
+            If you have any questions or feedback, feel free to reach out to us at:
+        </p>
+        <p>
+            <strong>Email:</strong> support@InfinitySolve.com<br>
+            <strong>Phone:</strong> 3132200425
+        </p>
+    </div>
+
+    <!-- Footer (Kept Unchanged) -->
+    <div class="footer">
+        &copy; 2024 InfinitySolve. All rights reserved.
+    </div>
+</body>
+</html>
