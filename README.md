@@ -20,6 +20,7 @@ A Django-based AI-powered web application that enables users to **solve handwrit
 - **Frontend**: HTML, StreamingHttpResponse
 
 **📸 How It Works**
+
 Gesture Input: Uses index finger to draw on a virtual canvas.
 
 Canvas Analysis: The drawn image is captured and sent to Gemini AI.
